@@ -5,11 +5,12 @@ import Student from '@/components/Student'
 import Elementtab from '@/components/Elementtab'
 import home from '@/components/home'
 import Extendrow from '@/components/Extendrow'
+import Reportlist from '@/components/Reportlist'
 
 Vue.use(Router)
 
 export default new Router({
-  mode:'history',
+  mode: 'history',
   routes: [
     {
       path: '/ff',
@@ -64,6 +65,18 @@ export default new Router({
           path: 'fff',
           name: 'Extendrow',
           component: Extendrow
+        }]
+    }
+    ,
+    {
+      path: '/rptlist',
+      name: 'Reportlist',
+      component: Reportlist,
+      children: [
+        {
+          path: 'fff',
+          name: 'Reportlist',
+          component: Reportlist
         }]
     }
   ]
