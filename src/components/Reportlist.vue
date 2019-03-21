@@ -1,16 +1,31 @@
 <template>
-    <div id="table2">
+    <div>
+		<div class="app-container calendar-list-container">
+		  <div class="filter-container">
+			<div>
+				<span class="filter-item" style="width:50px;">项目：</span>
+				<el-select class="filter-item" clearable style="width:200px;" v-model="listQuery.sex" placeholder="请选择">
+				<el-option v-for="item in genderOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+				</el-select>
+				<span class="filter-item" style="width:100px;">执行时间：</span>
+				<el-select class="filter-item" clearable style="width:200px;" v-model="listQuery.sex" placeholder="请选择">
+				<el-option v-for="item in genderOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+				</el-select>
+			</div>
+		  </div>
+		</div>
        <el-table
         :data="tableData5"
         style="result_table"
-		cell-style="result_table_td"
         stripe
         row-key="interfaceName"
 		:expand-row-keys="expands"
 		@row-click="rowClick"
 		:row-class-name="selectOneClass">
         <el-table-column type="expand">
+	      
             <template slot-scope="props">
+			<div class="app-container calendar-list-container">
                <el-table
                     :data="props.row.result"
                     :row-class-name="selectTwoClass"
@@ -26,9 +41,11 @@
                         <template slot-scope="oscope">{{ oscope.row.resultSign | TypeFilter }}</template>
                     </el-table-column>
                </el-table>
+			   </div>
             </template>
+			
         </el-table-column>
-        <el-table-column  label="Test Group/Test case" prop="interfaceName">
+        <el-table-column  label="Test Group/                           Test case                           "  prop="interfaceName">
         </el-table-column>
         <el-table-column label="Count" prop="total">
         </el-table-column>
@@ -49,27 +66,29 @@
             </template>
         </el-table-column>
     </el-table>
-    </div>
+  </div>
 </template>
+
 <script>
- export default {
-  data() {
+export default {
+  data() {	
     return {
-      tableData5: [
-  {
-		"error": 0,
-		"fail": 0,
+      tableData5: 
+	  [
+       {
+		"error": 1,
+		"fail": 1,
 		"interfaceName": "/featured/index/configs/pageQueryPositionShows",
 		"result": [{
 			"errordes": "",
 			"interfacename": "https://uat-steam-api.opg.cn/featured/index/configs/pageQueryPositionShows",
-			"resultSign": "0",
+			"resultSign": "1",
 			"testcaseid": "home_page_1",
 			"testpoint": "\u7528\u6237\u6d4f\u89c8\u9996\u9875-\u70ed\u95e8\u63a8\u8350\u8fd0\u8425\u4f4d\u914d\u7f6e\u5185\u5bb9"
 		}, {
 			"errordes": "",
 			"interfacename": "https://uat-steam-api.opg.cn/featured/index/configs/pageQueryPositionShows",
-			"resultSign": "0",
+			"resultSign": "2",
 			"testcaseid": "find_page_cal_1",
 			"testpoint": "\u7528\u6237\u6d4f\u89c8\u53d1\u73b0\u9875-\u8ba1\u7b97\u63a8\u8350\u5185\u5bb9"
 		}, {
@@ -79,9 +98,9 @@
 			"testcaseid": "home_page_1",
 			"testpoint": "\u7528\u6237\u6d4f\u89c8\u521b\u65b0\u5927\u8d5b-\u8ba1\u7b97\u5185\u5bb9\u5217\u8868"
 		}],
-		"success": 3,
+		"success": 1,
 		"total": 3
-	}, {
+	   }, {
 		"error": 0,
 		"fail": 0,
 		"interfaceName": "/featured/index/configs/queryShowConfigs",
@@ -136,7 +155,7 @@
 		}],
 		"success": 8,
 		"total": 8
-	}, {
+	   }, {
 		"error": 0,
 		"fail": 0,
 		"interfaceName": "/match-service/member/apply",
@@ -203,7 +222,7 @@
 		}],
 		"success": 10,
 		"total": 10
-	}, {
+	   }, {
 		"error": 0,
 		"fail": 0,
 		"interfaceName": "/match-service/member/apply/cancel",
@@ -223,9 +242,67 @@
 		"success": 2,
 		"total": 2
 
-	}]
-      ,
-      expands:[]
+	   }],
+      expands:[],
+	  orderStateOptions: [
+        {
+          value: '00',
+          label: "待审核"
+        },
+        {
+          value: '01',
+          label: "审核通过"
+        },
+        {
+          value: '02',
+          label: "审核不通过"
+        },
+        {
+          value: '10',
+          label: "待确认"
+        },
+        {
+          value: '11',
+          label: "待付款"
+        },
+        {
+          value: '12',
+          label: "待发货"
+        },
+        {
+          value: '13',
+          label: "待收货"
+        },
+        {
+          value: '14',
+          label: "已完成"
+        },
+        {
+          value: '15',
+          label: "已取消"
+        },
+		
+      ],
+	  listQuery: {
+                currentPage: 1,
+                pageSize: 10,
+                nickName: null,
+                phone: null,
+                sex: null,
+                followState: null,
+                followBeginTime: null,
+                followEndTime: null,
+                registerBeginTime: null,
+                registerEndTime: null,
+                 createBeginTime: null,
+                createEndTime: null,
+                 registerState: null,
+                pointLessThan: null,
+                pointGreatThan: null,
+                orderType:'NORMAL'//按用户积分排序 默认正常
+           },
+	  curValue:'',
+	  value:"已取消"
     };
   },
   filters:{
@@ -243,27 +320,29 @@
   },
   methods:{
       editInfo(interfaceName){  //编辑
-          alert(interfaceName);
           this.$router.push({ name: 'Elementtab', params: { plan: interfaceName }})
       },
       selectOneClass(row, index){
-        if(row.totle == row.success)
-            return 'passClass'
-        else if(row.fail>0)
-            return 'failClass'
+        if(row.row.total == row.row.success)
+            return 'passClass';
+        else if(row.row.fail>0)
+            return 'failClass';
         else
-            return 'errorClass'
+            return 'errorClass';
       },
       selectTwoClass(row, index){
-        if(row.resultSign == '0')
+        if(row.row.resultSign == '0')
             return 'passCase'
-        else if(row.resultSign=='1')
+        else if(row.row.resultSign=='1')
             return 'failCase'
         else
             return 'errorCase'
       },
+	  handleFilter(curValue){
+		     this.value=curValue
+             this.curValue=curValue
+	  },
       rowClick(row, event, column) {   //控制展开行
-        alert(this.expands)
         // var NoIndex = column.type.indexOf("expand");
         //if (NoIndex == 0 && row.child.length <= 0) {
         if (row.result.length <= 0) {
@@ -278,20 +357,18 @@
             }
             };
             if (this.expands.indexOf(row.interfaceName) < 0) {  //确保只展开一行
-               // this.expands.shift();
                 this.expands.push(row.interfaceName);
             } else {
-                alert("remove");
                 this.expands.shift();
-                alert(this.expands);
             }
         } else {
             return;
         }
-     },
-   }
- }
+       }
+      }
+    }
 </script>
+
 <style>
 /* -- report ------------------------------------------------------------------------ */
 #show_detail_line {

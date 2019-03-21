@@ -6,6 +6,7 @@ import Elementtab from '@/components/Elementtab'
 import home from '@/components/home'
 import Extendrow from '@/components/Extendrow'
 import Reportlist from '@/components/Reportlist'
+import test from '@/components/test'
 
 Vue.use(Router)
 
@@ -77,6 +78,17 @@ export default new Router({
           path: 'fff',
           name: 'Reportlist',
           component: Reportlist
+        }]
+    },
+    {
+      path: '/xffs',
+      name: 'test',
+      component: test,
+      children: [
+        {
+          path: 'fff',
+          name: 'test',
+          component: test
         }]
     }
   ]
