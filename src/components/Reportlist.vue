@@ -1,20 +1,20 @@
 <template>
     <div>
-		<div class="app-container calendar-list-container">
-		  <div class="filter-container">
-			<div>
-				<span class="filter-item" style="width:50px;">项目：</span>
-				<el-select class="filter-item" clearable style="width:200px;" v-model="listQuery.sex" placeholder="请选择">
-				<el-option v-for="item in genderOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
-				</el-select>
-				<span class="filter-item" style="width:100px;">执行时间：</span>
-				<el-select class="filter-item" clearable style="width:200px;" v-model="listQuery.sex" placeholder="请选择">
-				<el-option v-for="item in genderOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
-				</el-select>
-			</div>
+		<div>
+		  <div>
+			 <div>
+				  <span class="one" style="width:200px;">项目：</span>
+			  	<el-select class="two"  style="width:200px;" v-model="listQuery.sex" placeholder="请选择">
+			  	  <el-option v-for="item in genderOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+				  </el-select>
+				  <span  class="three" style="width:100px;">执行时间：</span>
+				  <el-select class="four" style="width:200px;" v-model="listQuery.sex" placeholder="请选择">
+				     <el-option v-for="item in genderOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+				  </el-select>
+		   </div>
 		  </div>
 		</div>
-       <el-table
+    <el-table
         :data="tableData5"
         style="result_table"
         stripe
@@ -23,7 +23,7 @@
 		@row-click="rowClick"
 		:row-class-name="selectOneClass">
         <el-table-column type="expand">
-	      
+
             <template slot-scope="props">
 			<div class="app-container calendar-list-container">
                <el-table
@@ -43,9 +43,9 @@
                </el-table>
 			   </div>
             </template>
-			
+
         </el-table-column>
-        <el-table-column  label="Test Group/                           Test case                           "  prop="interfaceName">
+        <el-table-column  label="Test Group/Test case"  prop="interfaceName">
         </el-table-column>
         <el-table-column label="Count" prop="total">
         </el-table-column>
@@ -71,9 +71,9 @@
 
 <script>
 export default {
-  data() {	
+  data() {
     return {
-      tableData5: 
+      tableData5:
 	  [
        {
 		"error": 1,
@@ -281,7 +281,7 @@ export default {
           value: '15',
           label: "已取消"
         },
-		
+
       ],
 	  listQuery: {
                 currentPage: 1,
@@ -427,4 +427,77 @@ export default {
 .errorCase  { color: #c00; font-weight: bold; }
 .hiddenRow  { display: none; }
 .testcase   { margin-left: 2em; }
+</style>
+
+<style type="text/css">
+.one
+{
+position:fixed;
+left:10px;
+top:20px;
+}
+.two
+{
+position:fixed;
+top:10px;
+left:150px;
+}
+.three
+{
+position:fixed;
+left:400px;
+top:20px;
+}
+.four
+{
+position:fixed;
+top:10px;
+left:500px;
+}
+</style>
+
+<style type="text/css">
+.clsInterface
+{
+position:fixed;
+left:10px;
+top:20px;
+width:100
+}
+.clsCount
+{
+position:fixed;
+top:10px;
+left:150px;
+}
+.clsPass
+{
+position:fixed;
+left:400px;
+top:20px;
+}
+.clsFail
+{
+position:fixed;
+top:10px;
+left:500px;
+}
+.clsError
+{
+position:fixed;
+top:10px;
+left:500px;
+}
+.clsView
+{
+position:fixed;
+top:10px;
+left:500px;
+}
+.clsRun
+{
+position:fixed;
+top:10px;
+left:500px;
+}
 </style>
