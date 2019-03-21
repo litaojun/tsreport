@@ -15,17 +15,16 @@
 		  </div>
 		</div>
     <el-table
-        :data="tableData5"
-        style="result_table"
-        stripe
-        row-key="interfaceName"
+    :data="tableData5"
+    class="result_table"
+    stripe
+    row-key="interfaceName"
 		:expand-row-keys="expands"
 		@row-click="rowClick"
 		:row-class-name="selectOneClass">
         <el-table-column type="expand">
-
             <template slot-scope="props">
-			<div class="app-container calendar-list-container">
+			        <div class="app-container calendar-list-container">
                <el-table
                     :data="props.row.result"
                     :row-class-name="selectTwoClass"
@@ -45,22 +44,22 @@
             </template>
 
         </el-table-column>
-        <el-table-column  label="Test Group/Test case"  prop="interfaceName">
+        <el-table-column style="clsInterface" label="Test Group/Test case"  prop="interfaceName">
         </el-table-column>
-        <el-table-column label="Count" prop="total">
+        <el-table-column class="clsTotal" label="total" prop="total">
         </el-table-column>
-        <el-table-column label="Pass" prop="success">
+        <el-table-column class="clsPass" label="pass"  prop="success">
         </el-table-column>
-        <el-table-column label="Fail" prop="fail">
+        <el-table-column class="clsFail" label="fail"  prop="fail">
         </el-table-column>
-        <el-table-column label="Error" prop="error">
+        <el-table-column class="clsError" label="error"  prop="error">
         </el-table-column>
-        <el-table-column label="View" prop="">
+        <el-table-column class="clsView"  label="view" prop="">
           <template slot-scope="scope">
                 <el-button type="primary" @click.stop="editInfo(scope.row.interfacename)">run</el-button>
             </template>
         </el-table-column>
-        <el-table-column label="run">
+        <el-table-column class="clsRun"  label="run" >
             <template slot-scope="scope">
                 <el-button type="primary" @click.stop="editInfo(scope.row.interfacename)">run</el-button>
             </template>
@@ -460,44 +459,43 @@ left:500px;
 .clsInterface
 {
 position:fixed;
-left:10px;
-top:20px;
-width:100
+left:60000px;
+width:1000
 }
 .clsCount
 {
 position:fixed;
-top:10px;
 left:150px;
+width:100
 }
 .clsPass
 {
 position:fixed;
 left:400px;
-top:20px;
+width:100
 }
 .clsFail
 {
 position:fixed;
-top:10px;
+width:100;
 left:500px;
 }
 .clsError
 {
 position:fixed;
-top:10px;
+width:100;
 left:500px;
 }
 .clsView
 {
 position:fixed;
-top:10px;
+width:100;
 left:500px;
 }
 .clsRun
 {
 position:fixed;
-top:10px;
+width:100;
 left:500px;
 }
 </style>
