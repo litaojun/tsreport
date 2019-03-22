@@ -4,65 +4,80 @@
 		  <div>
 			 <div>
 				  <span class="one" style="width:200px;">项目：</span>
-			  	<el-select class="two"  style="width:200px;" v-model="listQuery.sex" placeholder="请选择">
+			  	<el-select class="two"  style="width:200px;" v-model="listQuery.projectName" placeholder="请选择">
 			  	  <el-option v-for="item in genderOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
 				  </el-select>
 				  <span  class="three" style="width:100px;">执行时间：</span>
 				  <el-select class="four" style="width:200px;" v-model="listQuery.sex" placeholder="请选择">
-				     <el-option v-for="item in genderOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+				     <el-option v-for="item in planTimeList" :key="item.id" :label="item.plantime" :value="item.id"></el-option>
 				  </el-select>
+					<el-button type="text" width="100px" class="five">Run</el-button>
+				  <el-button type="text" class="six">接口管理</el-button>
 		   </div>
 		  </div>
 		</div>
     <el-table
     :data="tableData5"
-    class="result_table"
-    stripe
+    border
     row-key="interfaceName"
 		:expand-row-keys="expands"
 		@row-click="rowClick"
+		style="width: 100%"
 		:row-class-name="selectOneClass">
         <el-table-column type="expand">
             <template slot-scope="props">
-			        <div class="app-container calendar-list-container">
                <el-table
+							      style="width: 100%"
                     :data="props.row.result"
                     :row-class-name="selectTwoClass"
                     :show-header=false>
                     <el-table-column
                         :show-overflow-tooltip="true"
+												fixed width="450"
                         label="">
                         <template slot-scope="oscope">{{oscope.row.testcaseid}}_{{ oscope.row.testpoint }}</template>
                     </el-table-column>
                     <el-table-column
-                        :show-overflow-tooltip="true"
+												fixed width="400"
+												align="center"
                         label="">
                         <template slot-scope="oscope">{{ oscope.row.resultSign | TypeFilter }}</template>
                     </el-table-column>
+										<el-table-column fixed width="130"  label="view" prop="errordes">
+										    <template slot-scope="props">
+													<el-popover placement="bottom"
+													title="异常信息"
+													width="600"
+													trigger="click"
+													content="">
+													<div class="divcss555">
+															{{ props.row.errordes }}
+													</div>
+														<el-button slot="reference">查看详细</el-button>
+													</el-popover>
+											</template>
+										</el-table-column>
+										<el-table-column fixed width="100"  label="log" >
+												<template slot-scope="scope">
+												<el-button type="text">detail</el-button>
+												</template>
+										</el-table-column>
                </el-table>
-			   </div>
-            </template>
-
+          </template>
         </el-table-column>
-        <el-table-column style="clsInterface" label="Test Group/Test case"  prop="interfaceName">
+        <el-table-column fixed width="500"   label="Test Group/Test case"  prop="interfaceName">
         </el-table-column>
-        <el-table-column class="clsTotal" label="total" prop="total">
+        <el-table-column fixed width="100" label="total" prop="total">
         </el-table-column>
-        <el-table-column class="clsPass" label="pass"  prop="success">
+        <el-table-column fixed width="100" label="pass"  prop="success">
         </el-table-column>
-        <el-table-column class="clsFail" label="fail"  prop="fail">
+        <el-table-column fixed width="100" label="fail"  prop="fail">
         </el-table-column>
-        <el-table-column class="clsError" label="error"  prop="error">
+        <el-table-column fixed width="100" label="error"  prop="error">
         </el-table-column>
-        <el-table-column class="clsView"  label="view" prop="">
-          <template slot-scope="scope">
-                <el-button type="primary" @click.stop="editInfo(scope.row.interfacename)">run</el-button>
-            </template>
+        <el-table-column fixed width="130"  label="view" prop="">
         </el-table-column>
-        <el-table-column class="clsRun"  label="run" >
-            <template slot-scope="scope">
-                <el-button type="primary" @click.stop="editInfo(scope.row.interfacename)">run</el-button>
-            </template>
+        <el-table-column fixed width="103"  label="run" >
         </el-table-column>
     </el-table>
   </div>
@@ -72,6 +87,19 @@
 export default {
   data() {
     return {
+			genderOptions: [{
+            value: "1",
+            label: "OmSteam垂直孵化"
+          },
+          {
+            value: "2",
+            label: "小红巢"
+          },
+          {
+            value: "0",
+            label: "请选择"
+          }
+        ],
       tableData5:
 	  [
        {
@@ -79,7 +107,7 @@ export default {
 		"fail": 1,
 		"interfaceName": "/featured/index/configs/pageQueryPositionShows",
 		"result": [{
-			"errordes": "",
+			"errordes": "ffffsss",
 			"interfacename": "https://uat-steam-api.opg.cn/featured/index/configs/pageQueryPositionShows",
 			"resultSign": "1",
 			"testcaseid": "home_page_1",
@@ -282,10 +310,25 @@ export default {
         },
 
       ],
+		planTimeList:[
+			{
+				id: 1,
+			  plantime: '2018-08-22 11:10:02'
+			},
+			{
+				id: 2,
+			  plantime: '2018-09-22 11:10:02'
+			},
+			{
+				id: 3,
+			  plantime: '2018-09-27 11:10:02'
+			},
+		],
 	  listQuery: {
                 currentPage: 1,
                 pageSize: 10,
                 nickName: null,
+								projectName: null,
                 phone: null,
                 sex: null,
                 followState: null,
@@ -321,7 +364,7 @@ export default {
       editInfo(interfaceName){  //编辑
           this.$router.push({ name: 'Elementtab', params: { plan: interfaceName }})
       },
-      selectOneClass(row, index){
+      selectOneClass(row, rowIndex){
         if(row.row.total == row.row.success)
             return 'passClass';
         else if(row.row.fail>0)
@@ -417,13 +460,13 @@ export default {
 .statusTableOne  { color: #7B68EE;font-size: 5px; }
 .statusTableTwo  { color: #00CED1;font-size: 10px; }
 .statusTableThree  { color: red;font-size: 15px; }
-.passClass  { background-color: #6c6; }
-.failClass  { background-color: #c60; }
-.errorClass { background-color: #c00; }
+.el-table .passClass  { background-color: #6c6; }
+.el-table .failClass  { background-color: #c60; }
+.el-table .errorClass { background-color: #c00; }
 .interfaceClass  { background-color: #1E90FF; }
-.passCase   { color: #6c6; }
-.failCase   { color: #c60; font-weight: bold; }
-.errorCase  { color: #c00; font-weight: bold; }
+.el-table .passCase   { color: #6c6; }
+.el-table .failCase   { color: #c60; font-weight: bold; }
+.el-table .errorCase  { color: #c00; font-weight: bold; }
 .hiddenRow  { display: none; }
 .testcase   { margin-left: 2em; }
 </style>
@@ -453,8 +496,19 @@ position:fixed;
 top:10px;
 left:500px;
 }
+.five
+{
+position:fixed;
+top:10px;
+left:750px;
+}
+.six
+{
+position:fixed;
+top:10px;
+left:850px;
+}
 </style>
-
 <style type="text/css">
 .clsInterface
 {
