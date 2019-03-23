@@ -4,12 +4,20 @@
 		  <div>
 			 <div>
 				  <span class="one" style="width:200px;">项目：</span>
-			  	<el-select class="two"  style="width:200px;" v-model="listQuery.projectName" placeholder="请选择">
-			  	  <el-option v-for="item in genderOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+			  	<el-select class="two"
+          style="width:200px;"
+          v-model="listQuery.projectName"
+          @change="selectProNameChange"
+          placeholder="请选择">
+			  	  <el-option v-for="item in genderOptions" :key="item.label" :label="item.label" :value="item.label"></el-option>
 				  </el-select>
 				  <span  class="three" style="width:100px;">执行时间：</span>
-				  <el-select class="four" style="width:200px;" v-model="listQuery.sex" placeholder="请选择">
-				     <el-option v-for="item in planTimeList" :key="item.id" :label="item.plantime" :value="item.id"></el-option>
+				  <el-select class="four"
+          style="width:200px;"
+          v-model="listQuery.planTime"
+          @change="planTimeChange"
+          placeholder="请选择">
+				     <el-option v-for="item in planTimeList" :key="item.id" :label="item.plantime" :value="item.id"  selected></el-option>
 				  </el-select>
 					<el-button type="text" width="100px" class="five">Run</el-button>
 				  <el-button type="text" class="six">接口管理</el-button>
@@ -58,9 +66,7 @@
 											</template>
 										</el-table-column>
 										<el-table-column fixed width="100"  label="log" >
-												<template slot-scope="scope">
-												<el-button type="text">detail</el-button>
-												</template>
+												<el-button type="text">down</el-button>
 										</el-table-column>
                </el-table>
           </template>
@@ -77,19 +83,20 @@
         </el-table-column>
         <el-table-column fixed width="130"  label="view" prop="">
         </el-table-column>
-        <el-table-column fixed width="103"  label="run" >
+        <el-table-column fixed width="103"  label="log" >
         </el-table-column>
     </el-table>
   </div>
 </template>
 
 <script>
+import { reqPlanTimeList, reqTestReport } from '../api/testmgr';
 export default {
   data() {
     return {
 			genderOptions: [{
             value: "1",
-            label: "OmSteam垂直孵化"
+            label: "steam亲子教育"
           },
           {
             value: "2",
@@ -270,46 +277,7 @@ export default {
 		"total": 2
 
 	   }],
-      expands:[],
-	  orderStateOptions: [
-        {
-          value: '00',
-          label: "待审核"
-        },
-        {
-          value: '01',
-          label: "审核通过"
-        },
-        {
-          value: '02',
-          label: "审核不通过"
-        },
-        {
-          value: '10',
-          label: "待确认"
-        },
-        {
-          value: '11',
-          label: "待付款"
-        },
-        {
-          value: '12',
-          label: "待发货"
-        },
-        {
-          value: '13',
-          label: "待收货"
-        },
-        {
-          value: '14',
-          label: "已完成"
-        },
-        {
-          value: '15',
-          label: "已取消"
-        },
-
-      ],
+     expands:[],
 		planTimeList:[
 			{
 				id: 1,
@@ -326,9 +294,10 @@ export default {
 		],
 	  listQuery: {
                 currentPage: 1,
+                projectName: 'steam亲子教育',
+                planTime: null,
                 pageSize: 10,
                 nickName: null,
-								projectName: null,
                 phone: null,
                 sex: null,
                 followState: null,
@@ -360,7 +329,62 @@ export default {
         }
       }
   },
+  created() {
+    // alert("litaojun-created");
+    this.getPlanTimeList(this.listQuery.projectName);
+  },
+
   methods:{
+      selectProNameChange(optionValue)
+      {
+           alert(optionValue)
+           this.getPlanTimeList(optionValue)
+      },
+      planTimeChange(optionValue)
+      {
+            alert(optionValue)
+            this.listQuery.planTime=optionValue
+            this.getTestReportByPlanId(optionValue)
+
+      },
+      getPlanTimeList(proName)
+      {
+          // alert("litaojun-created-0");
+          const data = {
+                            projectname: proName
+                       };
+          // alert("litaojun-created-0-1");
+          // alert(JSON.stringify(data))
+          reqPlanTimeList(data).then(res => {
+          // alert("litaojun-created-1");
+          if(res.data.code==='000000'){
+            // alert("litaojun-created-2");
+            this.planTimeList = res.data.listplan;
+            let num = this.planTimeList.length
+            if(num>0)
+            {
+               this.listQuery.planTime=this.planTimeList[num-1].id;
+               alert(JSON.stringify(this.listQuery.planTime))
+               this.getTestReportByPlanId(this.planTimeList[num-1].id)
+            }
+            else{
+               this.tableData5=[]
+               this.planTimeList=[]
+            }
+          }
+          })
+      },
+      getTestReportByPlanId(planid)
+      {
+          reqTestReport({'planid': planid}).then(res => {
+          // alert("litaojun-created-1");
+          if(res.data.code==='000000'){
+            // alert("litaojun-created-2");
+            this.tableData5=res.data.testrst
+            // alert(JSON.stringify(this.listQuery.planTime))
+          }
+          })
+      },
       editInfo(interfaceName){  //编辑
           this.$router.push({ name: 'Elementtab', params: { plan: interfaceName }})
       },
