@@ -1,7 +1,6 @@
 <template>
     <div>
 		<div>
-		  <div>
 			 <div>
 				  <span class="one" style="width:200px;">项目：</span>
 			  	<el-select class="two"
@@ -19,10 +18,12 @@
           placeholder="请选择">
 				     <el-option v-for="item in planTimeList" :key="item.id" :label="item.plantime" :value="item.id"  selected></el-option>
 				  </el-select>
-					<el-button type="text" width="100px" class="five">Run</el-button>
+					<el-button type="text" width="100px" @click="runTestCases" class="five">Run</el-button>
 				  <el-button type="text" class="six">接口管理</el-button>
 		   </div>
-		  </div>
+			 <div v-if="progress.showPrise">
+				 <el-progress :text-inside="true" :stroke-width="18" :percentage="progress.percentage"></el-progress>
+			 </div>
 		</div>
     <el-table
     :data="tableData5"
@@ -90,10 +91,18 @@
 </template>
 
 <script>
-import { reqPlanTimeList, reqTestReport } from '../api/testmgr';
+import { reqPlanTimeList, reqTestReport, reqRunTestcases ,reqCheckRunProgressOrState} from '../api/testmgr';
+import { clearInterval, setInterval } from 'timers';
 export default {
   data() {
     return {
+			progress:{
+						showPrise: false,
+            percentage: 0,
+            tokenId: null,
+            startTime: null,
+            timer: null
+			},
 			genderOptions: [{
             value: "1",
             label: "steam亲子教育"
@@ -277,7 +286,7 @@ export default {
 		"total": 2
 
 	   }],
-     expands:[],
+    expands:[],
 		planTimeList:[
 			{
 				id: 1,
@@ -335,6 +344,39 @@ export default {
   },
 
   methods:{
+			runTestCases()
+			{
+           reqRunTestcases({projectname: this.listQuery.projectName}).then(res => {
+          // alert("litaojun-created-1");
+          if(res.data.sign==='000000'){
+              this.progress.tokenId = res.data.token,
+              this.progress.startTime = res.data.starttime
+              this.progress.showPrise = true
+              this.progress.percentage = 0
+              this.progress.timer = setInterval(this.checkRunProgressOrState,5000)
+              // this.planTimeList.push(this.progress.startTime)
+          }
+        })
+      },
+      checkRunProgressOrState()
+      {
+        reqCheckRunProgressOrState({projectname: this.listQuery.projectName,
+                                       token: this.progress.tokenId}).then(res => {
+           if(res.data.status==1)
+           {
+             if(this.progress.percentage<96)
+                this.progress.percentage = this.progress.percentage + 1
+
+           }
+           else if(res.data.status==2)
+           {
+             alert(this.progress.percentage)
+             this.progress.percentage=100
+             clearInterval(this.progress.timer)
+             this.selectProNameChange(this.listQuery.projectName)
+           }
+        })
+      },
       selectProNameChange(optionValue)
       {
            alert(optionValue)
@@ -389,6 +431,8 @@ export default {
           this.$router.push({ name: 'Elementtab', params: { plan: interfaceName }})
       },
       selectOneClass(row, rowIndex){
+        if(row.row.total == 0)
+           return 'notTestClass'
         if(row.row.total == row.row.success)
             return 'passClass';
         else if(row.row.fail>0)
@@ -487,10 +531,12 @@ export default {
 .el-table .passClass  { background-color: #6c6; }
 .el-table .failClass  { background-color: #c60; }
 .el-table .errorClass { background-color: #c00; }
+.el-table .notTestClass { background-color: rgb(230, 215, 86); }
 .interfaceClass  { background-color: #1E90FF; }
 .el-table .passCase   { color: #6c6; }
 .el-table .failCase   { color: #c60; font-weight: bold; }
 .el-table .errorCase  { color: #c00; font-weight: bold; }
+.el-table .notTestCase  { color: rgb(134, 19, 82); font-weight: bold; }
 .hiddenRow  { display: none; }
 .testcase   { margin-left: 2em; }
 </style>

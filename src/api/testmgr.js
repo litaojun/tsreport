@@ -19,3 +19,23 @@ export function reqTestReport(query) {
   })
   // return request.get('/rptqy/prop/testplanlist', { params: query })
 }
+
+export function reqRunTestcases(query) {
+  // alert(query)
+  return request({
+    url: '/tsrun/prop/runTestPro',
+    method: 'get',
+    params: query
+  })
+  // return request.get('/rptqy/prop/testplanlist', { params: query })
+}
+
+export function reqCheckRunProgressOrState(query) {
+  // alert(query)
+  return request({
+    url: '/tsrun/prop/queryRunProcess',
+    method: 'get',
+    params: query
+  })
+  // return request.get('/rptqy/prop/testplanlist', { params: query })
+}
