@@ -18,8 +18,9 @@
 				     <el-option v-for="item in planTimeList" :key="item.id" :label="item.plantime" :value="item.id"  selected></el-option>
 				  </el-select>
 		   </div>
-			 <div v-if="progress.showPrise">
-				 <el-progress :text-inside="true" :stroke-width="18" :percentage="progress.percentage"></el-progress>
+			 <div v-if="progress.showPrise" style="">
+				 <el-progress :text-inside="true" :stroke-width="18" :percentage="progress.percentage" style="width: 95%;">
+         </el-progress>
 			 </div>
 		</div>
     <el-table
