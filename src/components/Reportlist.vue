@@ -1,8 +1,7 @@
 <template>
-    <div>
-		<div>
-			 <div>
-				  <span class="one" style="width:200px;">项目：</span>
+    <div align="center">
+		<div align="center">
+			 <div align="center">
 			  	<el-select class="two"
           style="width:200px;"
           v-model="listQuery.projectName"
@@ -10,16 +9,14 @@
           placeholder="请选择">
 			  	  <el-option v-for="item in genderOptions" :key="item.label" :label="item.label" :value="item.label"></el-option>
 				  </el-select>
-				  <span  class="three" style="width:100px;">执行时间：</span>
+					<el-button type="text" width="100px" @click="runTestCases" class="five">Run</el-button>
 				  <el-select class="four"
           style="width:200px;"
-          v-model="listQuery.planTime"
+          v-model="listQuery.planid"
           @change="planTimeChange"
           placeholder="请选择">
 				     <el-option v-for="item in planTimeList" :key="item.id" :label="item.plantime" :value="item.id"  selected></el-option>
 				  </el-select>
-					<el-button type="text" width="100px" @click="runTestCases" class="five">Run</el-button>
-				  <el-button type="text" class="six">接口管理</el-button>
 		   </div>
 			 <div v-if="progress.showPrise">
 				 <el-progress :text-inside="true" :stroke-width="18" :percentage="progress.percentage"></el-progress>
@@ -31,7 +28,7 @@
     row-key="interfaceName"
 		:expand-row-keys="expands"
 		@row-click="rowClick"
-		style="width: 100%"
+		style="width: 95%;"
 		:row-class-name="selectOneClass">
         <el-table-column type="expand">
             <template slot-scope="props">
@@ -42,13 +39,12 @@
                     :show-header=false>
                     <el-table-column
                         :show-overflow-tooltip="true"
-												fixed width="450"
+												fixed width="550"
                         label="">
                         <template slot-scope="oscope">{{oscope.row.testcaseid}}_{{ oscope.row.testpoint }}</template>
                     </el-table-column>
                     <el-table-column
 												fixed width="400"
-												align="center"
                         label="">
                         <template slot-scope="oscope">{{ oscope.row.resultSign | TypeFilter }}</template>
                     </el-table-column>
@@ -67,12 +63,14 @@
 											</template>
 										</el-table-column>
 										<el-table-column fixed width="100"  label="log" >
-												<el-button type="text">down</el-button>
+										  <template slot-scope="scope">
+												 <el-button type="text" @click="downLogFile(scope.row.interfacename)">down</el-button>
+											</template>
 										</el-table-column>
                </el-table>
           </template>
         </el-table-column>
-        <el-table-column fixed width="500"   label="Test Group/Test case"  prop="interfaceName">
+        <el-table-column fixed width="600"   label="Test Group/Test case"  prop="interfaceName">
         </el-table-column>
         <el-table-column fixed width="100" label="total" prop="total">
         </el-table-column>
@@ -80,18 +78,18 @@
         </el-table-column>
         <el-table-column fixed width="100" label="fail"  prop="fail">
         </el-table-column>
-        <el-table-column fixed width="100" label="error"  prop="error">
+        <el-table-column fixed width="100" label="error" prop="error">
         </el-table-column>
-        <el-table-column fixed width="130"  label="view" prop="">
+        <el-table-column fixed width="130" label="view"  prop="">
         </el-table-column>
-        <el-table-column fixed width="103"  label="log" >
+        <el-table-column fixed width="103" label="log" >
         </el-table-column>
     </el-table>
   </div>
 </template>
 
 <script>
-import { reqPlanTimeList, reqTestReport, reqRunTestcases ,reqCheckRunProgressOrState} from '../api/testmgr';
+import { reqPlanTimeList, reqTestReport, reqDownLogFile, reqRunTestcases ,reqCheckRunProgressOrState} from '../api/testmgr';
 import { clearInterval, setInterval } from 'timers';
 export default {
   data() {
@@ -128,18 +126,6 @@ export default {
 			"resultSign": "1",
 			"testcaseid": "home_page_1",
 			"testpoint": "\u7528\u6237\u6d4f\u89c8\u9996\u9875-\u70ed\u95e8\u63a8\u8350\u8fd0\u8425\u4f4d\u914d\u7f6e\u5185\u5bb9"
-		}, {
-			"errordes": "",
-			"interfacename": "https://uat-steam-api.opg.cn/featured/index/configs/pageQueryPositionShows",
-			"resultSign": "2",
-			"testcaseid": "find_page_cal_1",
-			"testpoint": "\u7528\u6237\u6d4f\u89c8\u53d1\u73b0\u9875-\u8ba1\u7b97\u63a8\u8350\u5185\u5bb9"
-		}, {
-			"errordes": "",
-			"interfacename": "https://uat-steam-api.opg.cn/featured/index/configs/pageQueryPositionShows",
-			"resultSign": "0",
-			"testcaseid": "home_page_1",
-			"testpoint": "\u7528\u6237\u6d4f\u89c8\u521b\u65b0\u5927\u8d5b-\u8ba1\u7b97\u5185\u5bb9\u5217\u8868"
 		}],
 		"success": 1,
 		"total": 3
@@ -153,48 +139,6 @@ export default {
 			"resultSign": "0",
 			"testcaseid": "cnf_page_1",
 			"testpoint": "测试场景1"
-		}, {
-			"errordes": "",
-			"interfacename": "https://uat-steam-api.opg.cn/featured/index/configs/queryShowConfigs",
-			"resultSign": "0",
-			"testcaseid": "cnf_page_2",
-			"testpoint": "测试场景2"
-		}, {
-			"errordes": "",
-			"interfacename": "https://uat-steam-api.opg.cn/featured/index/configs/queryShowConfigs",
-			"resultSign": "0",
-			"testcaseid": "cnf_page_4",
-			"testpoint": "测试场景3"
-		}, {
-			"errordes": "",
-			"interfacename": "https://uat-steam-api.opg.cn/featured/index/configs/queryShowConfigs",
-			"resultSign": "0",
-			"testcaseid": "cnf_page_3",
-			"testpoint": "\u7528\u6237\u6d4f\u89c8\u9996\u9875\u914d\u7f6e\u5185\u5bb9-\u52a8\u6001"
-		}, {
-			"errordes": "",
-			"interfacename": "https://uat-steam-api.opg.cn/featured/index/configs/queryShowConfigs",
-			"resultSign": "0",
-			"testcaseid": "cnf_page_5",
-			"testpoint": "测试场景3"
-		}, {
-			"errordes": "",
-			"interfacename": "https://uat-steam-api.opg.cn/featured/index/configs/queryShowConfigs",
-			"resultSign": "0",
-			"testcaseid": "cnf_find_1",
-			"testpoint": "测试场景4"
-		}, {
-			"errordes": "",
-			"interfacename": "https://uat-steam-api.opg.cn/featured/index/configs/queryShowConfigs",
-			"resultSign": "0",
-			"testcaseid": "cnf_inov_1",
-			"testpoint": "测试场景5"
-		}, {
-			"errordes": "",
-			"interfacename": "https://uat-steam-api.opg.cn/featured/index/configs/queryShowConfigs",
-			"resultSign": "0",
-			"testcaseid": "cnf_inov_2",
-			"testpoint": "测试场景6"
 		}],
 		"success": 8,
 		"total": 8
@@ -208,60 +152,6 @@ export default {
 			"resultSign": "0",
 			"testcaseid": "match_apple_1",
 			"testpoint": "测试场景6"
-		}, {
-			"errordes": "",
-			"interfacename": "https://uat-steam-api.opg.cn/match-service/member/apply",
-			"resultSign": "0",
-			"testcaseid": "match_apple_2",
-			"testpoint": "测试场景7"
-		}, {
-			"errordes": "",
-			"interfacename": "https://uat-steam-api.opg.cn/match-service/member/apply",
-			"resultSign": "0",
-			"testcaseid": "match_apple_3",
-			"testpoint": "测试场景8"
-		}, {
-			"errordes": "",
-			"interfacename": "https://uat-steam-api.opg.cn/match-service/member/apply",
-			"resultSign": "0",
-			"testcaseid": "match_apple_4",
-			"testpoint": "测试场景9"
-		}, {
-			"errordes": "",
-			"interfacename": "https://uat-steam-api.opg.cn/match-service/member/apply",
-			"resultSign": "0",
-			"testcaseid": "match_apple_5",
-			"testpoint": "测试场景10"
-		}, {
-			"errordes": "",
-			"interfacename": "https://uat-steam-api.opg.cn/match-service/member/apply",
-			"resultSign": "0",
-			"testcaseid": "match_apple_6",
-			"testpoint": "测试场景11"
-		}, {
-			"errordes": "",
-			"interfacename": "https://uat-steam-api.opg.cn/match-service/member/apply",
-			"resultSign": "0",
-			"testcaseid": "match_apple_7",
-			"testpoint": "测试场景12"
-		}, {
-			"errordes": "",
-			"interfacename": "https://uat-steam-api.opg.cn/match-service/member/apply",
-			"resultSign": "0",
-			"testcaseid": "match_apple_8",
-			"testpoint": "测试场景13"
-		}, {
-			"errordes": "",
-			"interfacename": "https://uat-steam-api.opg.cn/match-service/member/apply",
-			"resultSign": "0",
-			"testcaseid": "match_apple_9",
-			"testpoint": "测试场景14"
-		}, {
-			"errordes": "",
-			"interfacename": "https://uat-steam-api.opg.cn/match-service/member/apply",
-			"resultSign": "0",
-			"testcaseid": "match_apple_10",
-			"testpoint": "测试场景15"
 		}],
 		"success": 10,
 		"total": 10
@@ -275,12 +165,6 @@ export default {
 			"resultSign": "0",
 			"testcaseid": "match_apple_1",
 			"testpoint": "测试场景16"
-		}, {
-			"errordes": "",
-			"interfacename": "https://uat-steam-api.opg.cn/match-service/member/apply/cancel",
-			"resultSign": "0",
-			"testcaseid": "match_apple_2",
-			"testpoint": "测试场景17"
 		}],
 		"success": 2,
 		"total": 2
@@ -291,20 +175,12 @@ export default {
 			{
 				id: 1,
 			  plantime: '2018-08-22 11:10:02'
-			},
-			{
-				id: 2,
-			  plantime: '2018-09-22 11:10:02'
-			},
-			{
-				id: 3,
-			  plantime: '2018-09-27 11:10:02'
-			},
+			}
 		],
 	  listQuery: {
                 currentPage: 1,
                 projectName: 'steam亲子教育',
-                planTime: null,
+                planid: 657,
                 pageSize: 10,
                 nickName: null,
                 phone: null,
@@ -314,9 +190,9 @@ export default {
                 followEndTime: null,
                 registerBeginTime: null,
                 registerEndTime: null,
-                 createBeginTime: null,
+                createBeginTime: null,
                 createEndTime: null,
-                 registerState: null,
+                registerState: null,
                 pointLessThan: null,
                 pointGreatThan: null,
                 orderType:'NORMAL'//按用户积分排序 默认正常
@@ -344,6 +220,26 @@ export default {
   },
 
   methods:{
+		  downLogFile(interfaceName)
+			{
+				reqDownLogFile({planId: this.listQuery.planid,interfacename: interfaceName}).then(res => {
+					//alert("downFile")
+					//alert(res.data)
+					this.download(res.data,interfaceName+".log")
+				})
+			},
+			download (data,name) {
+        if (!data) {
+            return
+        }
+        let url = window.URL.createObjectURL(new Blob([data]))
+        let link = document.createElement('a')
+        link.style.display = 'none'
+        link.href = url
+        link.setAttribute('download', name)
+        document.body.appendChild(link)
+        link.click()
+    },
 			runTestCases()
 			{
            reqRunTestcases({projectname: this.listQuery.projectName}).then(res => {
@@ -361,16 +257,15 @@ export default {
       checkRunProgressOrState()
       {
         reqCheckRunProgressOrState({projectname: this.listQuery.projectName,
-                                       token: this.progress.tokenId}).then(res => {
+                                    token: this.progress.tokenId}).then(res => {
            if(res.data.status==1)
            {
              if(this.progress.percentage<96)
                 this.progress.percentage = this.progress.percentage + 1
-
            }
            else if(res.data.status==2)
            {
-             alert(this.progress.percentage)
+             //alert(this.progress.percentage)
              this.progress.percentage=100
              clearInterval(this.progress.timer)
              this.selectProNameChange(this.listQuery.projectName)
@@ -379,34 +274,31 @@ export default {
       },
       selectProNameChange(optionValue)
       {
-           alert(optionValue)
+           //alert(optionValue)
            this.getPlanTimeList(optionValue)
       },
       planTimeChange(optionValue)
       {
-            alert(optionValue)
-            this.listQuery.planTime=optionValue
+            //alert(optionValue)
+            this.listQuery.planid=optionValue
             this.getTestReportByPlanId(optionValue)
 
       },
       getPlanTimeList(proName)
       {
-          // alert("litaojun-created-0");
+          //alert("litaojun-created-0");
           const data = {
                             projectname: proName
                        };
-          // alert("litaojun-created-0-1");
-          // alert(JSON.stringify(data))
           reqPlanTimeList(data).then(res => {
-          // alert("litaojun-created-1");
           if(res.data.code==='000000'){
-            // alert("litaojun-created-2");
+            //alert("litaojun-created-2");
             this.planTimeList = res.data.listplan;
             let num = this.planTimeList.length
             if(num>0)
             {
-               this.listQuery.planTime=this.planTimeList[num-1].id;
-               alert(JSON.stringify(this.listQuery.planTime))
+               this.listQuery.planid=this.planTimeList[num-1].id;
+               alert(JSON.stringify(this.listQuery.planid))
                this.getTestReportByPlanId(this.planTimeList[num-1].id)
             }
             else{
@@ -423,7 +315,7 @@ export default {
           if(res.data.code==='000000'){
             // alert("litaojun-created-2");
             this.tableData5=res.data.testrst
-            // alert(JSON.stringify(this.listQuery.planTime))
+            // alert(JSON.stringify(this.listQuery.id))
           }
           })
       },
@@ -557,20 +449,20 @@ left:150px;
 .three
 {
 position:fixed;
-left:400px;
+left:380px;
 top:20px;
 }
 .four
 {
 position:fixed;
 top:10px;
-left:500px;
+left:420px;
 }
 .five
 {
 position:fixed;
 top:10px;
-left:750px;
+left:370px;
 }
 .six
 {

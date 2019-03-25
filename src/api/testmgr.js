@@ -1,5 +1,16 @@
 import request from '@/utils/request'
 
+export function reqDownLogFile(query) {
+  // alert(query)
+  return request({
+    url: '/downfile/interface/log',
+    method: 'get',
+    params: query,
+    responseType: 'blob'
+  })
+  // return request.get('/rptqy/prop/testplanlist', { params: query })
+}
+
 export function reqPlanTimeList(query) {
   // alert(query)
   return request({
