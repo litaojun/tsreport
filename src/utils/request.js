@@ -5,7 +5,8 @@ import axios from 'axios'
 // import { apiBaseUrl } from '@/config'
 // create an axios instance
 const service = axios.create({
-  baseURL: 'http://127.0.0.1:8181/', // api的base_url
+  //baseURL: 'http://127.0.0.1:8181/', // api的base_url
+  baseURL: 'http://10.205.255.241:8181/', // api的base_url
   timeout: 10000 // request timeout
 })
 
