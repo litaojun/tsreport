@@ -67,8 +67,7 @@ export default new Router({
           name: 'Extendrow',
           component: Extendrow
         }]
-    }
-    ,
+    },
     {
       path: '/rptlist',
       name: 'Reportlist',

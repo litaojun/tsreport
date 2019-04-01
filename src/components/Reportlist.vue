@@ -25,6 +25,7 @@
 		</div>
     <el-table
     :data="tableData5"
+    row-style="height: 1px"
     border
     row-key="interfaceName"
 		:expand-row-keys="expands"
