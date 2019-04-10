@@ -296,12 +296,12 @@ export default {
           if(res.data.code==='000000'){
             //alert("litaojun-created-2");
             this.planTimeList = res.data.listplan;
-            let num = this.planTimeList.length
+            let num = this.planTimeList.length;
             if(num>0)
             {
                this.listQuery.planid=this.planTimeList[num-1].id;
-               alert(JSON.stringify(this.listQuery.planid))
-               this.getTestReportByPlanId(this.planTimeList[num-1].id)
+               alert(JSON.stringify(this.listQuery.planid));
+               this.getTestReportByPlanId(this.planTimeList[num-1].id);
             }
             else{
                this.tableData5=[]
