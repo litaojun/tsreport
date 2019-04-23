@@ -1,5 +1,4 @@
 <template>
-    <div align="center">
     <el-table
     :data="interfaceProxyTscase"
     row-style="height: 1px"
@@ -7,7 +6,7 @@
     row-key="interfaceName"
 		:expand-row-keys="expands"
 		@row-click="rowClick"
-		style="width: 95%;"
+		style="width: 88%;"
 		:row-class-name="selectOneClass">
         <el-table-column type="expand">
             <template slot-scope="props">
@@ -23,29 +22,34 @@
                         label="">
                     </el-table-column>
                     <el-table-column
-												fixed width="400"
+												fixed width="150"
                         label="">
                         <template slot-scope="scope">
                           <el-button type="text" @click="downCaseFile(scope.row.interfacename,scope.row.title)">down</el-button>
                         </template>
                     </el-table-column>
+                    <el-table-column fixed width="150" label="" >
+                          <template slot-scope="scope">
+                              <el-button type="text" @click="downFmtFile(scope.row.interfacename,'request')">down</el-button>
+                          </template>
+                  </el-table-column>
+                  <el-table-column fixed width="147" >
+                          <template slot-scope="scope">
+                              <el-button type="text" @click="downFmtFile(scope.row.interfacename,'response')">down</el-button>
+                          </template>
+                  </el-table-column>
                </el-table>
           </template>
         </el-table-column>
         <el-table-column fixed width="600"   label="接口地址"  prop="interfaceName">
         </el-table-column>
-        <el-table-column fixed width="100" label="请求json格式" prop="total">
-          			<template slot-scope="scope">
-										 <el-button type="text" @click="downFmtFile(scope.row.interfacename,'request')">down</el-button>
-								</template>
+        <el-table-column fixed width="150" label="请求json格式" prop="">
         </el-table-column>
-        <el-table-column fixed width="100" label="响应json格式"  prop="success">
-          			<template slot-scope="scope">
-										 <el-button type="text" @click="downFmtFile(scope.row.interfacename,'response')">down</el-button>
-								</template>
+        <el-table-column fixed width="150" label="响应json格式"  prop="">
+        </el-table-column>
+        <el-table-column fixed width="150" label="测试用例"  prop="">
         </el-table-column>
     </el-table>
-  </div>
 </template>
 
 <script>
