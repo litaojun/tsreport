@@ -6,8 +6,8 @@ import Elementtab from '@/components/Elementtab'
 import home from '@/components/home'
 import Extendrow from '@/components/Extendrow'
 import Reportlist from '@/components/Reportlist'
+import ProxyMitTscase from '@/components/ProxyMitTscase'
 import test from '@/components/test'
-
 Vue.use(Router)
 
 export default new Router({
@@ -81,13 +81,13 @@ export default new Router({
     },
     {
       path: '/xffs',
-      name: 'test',
-      component: test,
+      name: 'ProxyMitTscase',
+      component: ProxyMitTscase,
       children: [
         {
           path: 'fff',
-          name: 'test',
-          component: test
+          name: 'ProxyMitTscase',
+          component: ProxyMitTscase
         }]
     }
   ]
