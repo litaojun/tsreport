@@ -1,5 +1,22 @@
 import request from '@/utils/request'
 
+export function downProxyFile(data){
+  return request({
+    url: '/proxy/prop/downfile',
+    method: 'post',
+    data,
+    responseType: 'blob'
+  })
+}
+
+export function reqProxyCaseData(query){
+  return request({
+    url: '/proxy/prop/caselist',
+    method: 'get',
+    params: query
+  })
+}
+
 export function reqDownLogFile(query) {
   // alert(query)
   return request({

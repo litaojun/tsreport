@@ -230,7 +230,7 @@ export default {
 					this.download(res.data,interfaceName+".log")
 				})
 			},
-			download (data,name) {
+			download(data,name) {
         if (!data) {
             return
         }

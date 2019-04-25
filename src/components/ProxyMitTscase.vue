@@ -1,7 +1,6 @@
 <template>
     <el-table
     :data="interfaceProxyTscase"
-    row-style="height: 1px"
     border
     row-key="interfaceName"
 		:expand-row-keys="expands"
@@ -25,17 +24,17 @@
 												fixed width="150"
                         label="">
                         <template slot-scope="scope">
-                          <el-button type="text" @click="downCaseFile(scope.row.interfacename,scope.row.title)">down</el-button>
+                          <el-button type="text" @click="downFile(scope.row.casePath,scope.row.localName)">down</el-button>
                         </template>
                     </el-table-column>
                     <el-table-column fixed width="150" label="" >
                           <template slot-scope="scope">
-                              <el-button type="text" @click="downFmtFile(scope.row.interfacename,'request')">down</el-button>
+                              <el-button type="text" @click="downFile(scope.row.fmtReqPath,scope.row.localName)">down</el-button>
                           </template>
                   </el-table-column>
                   <el-table-column fixed width="147" >
                           <template slot-scope="scope">
-                              <el-button type="text" @click="downFmtFile(scope.row.interfacename,'response')">down</el-button>
+                              <el-button type="text" @click="downFile(scope.row.fmtRspPath,scope.row.localName)">down</el-button>
                           </template>
                   </el-table-column>
                </el-table>
@@ -53,7 +52,7 @@
 </template>
 
 <script>
-import { reqPlanTimeList, reqTestReport, reqDownLogFile, reqRunTestcases ,reqCheckRunProgressOrState} from '../api/testmgr';
+import { downProxyFile,reqProxyCaseData} from '../api/testmgr';
 import { clearInterval, setInterval } from 'timers';
 export default {
   data() {
@@ -71,7 +70,11 @@ export default {
 		     "interfaceName": "https://uat-steam-api.opg.cn/featured/index/configs/pageQueryPositionShows",
           "result": [{
             "title": "让MakeX成为青少年释放自我的舞台",
-            "interfacename": "/featured/index/configs/pageQueryPositionShows"
+            "interfacename":"/featured/index/configs/pageQueryPositionShows",
+            "fmtReqPath":"fmtReqPath",
+            "fmtRspPath":"fmtRspPath",
+            "casePath":"casePath",
+            "localName":"abs.yml"
           }]
 	   }],
     expands:[],
@@ -121,112 +124,24 @@ export default {
   created() {
     // alert("litaojun-created");
     // this.getPlanTimeList(this.listQuery.projectName);
+    this.getInterfaceProxyTscase()
   },
 
   methods:{
-      downFmtFile(interfaceName,fmtType)
+      downFile(filePath,localName)
       {
-        alert(interfaceName+"--"+fmtType)
-      },
-      downCaseFile(interfaceName,title)
-      {
-        alert(interfaceName+"--"+title)
-      },
-		  downLogFile(interfaceName)
-			{
-				reqDownLogFile({planId: this.listQuery.planid,interfacename: interfaceName}).then(res => {
-					//alert("downFile")
-					//alert(res.data)
-					this.download(res.data,interfaceName+".log")
-				})
-			},
-			download (data,name) {
-        if (!data) {
-            return
-        }
-        let url = window.URL.createObjectURL(new Blob([data]))
-        let link = document.createElement('a')
-        link.style.display = 'none'
-        link.href = url
-        link.setAttribute('download', name)
-        document.body.appendChild(link)
-        link.click()
-    },
-			runTestCases()
-			{
-           reqRunTestcases({projectname: this.listQuery.projectName}).then(res => {
+        downProxyFile({"filePath":filePath}).then(res => {
           // alert("litaojun-created-1");
-          if(res.data.sign==='000000'){
-              this.progress.tokenId = res.data.token,
-              this.progress.startTime = res.data.starttime
-              this.progress.showPrise = true
-              this.progress.percentage = 0
-              this.progress.timer = setInterval(this.checkRunProgressOrState,5000)
-              // this.planTimeList.push(this.progress.startTime)
-          }
-        })
-      },
-      checkRunProgressOrState()
-      {
-        reqCheckRunProgressOrState({projectname: this.listQuery.projectName,
-                                    token: this.progress.tokenId}).then(res => {
-           if(res.data.status==1)
-           {
-             if(this.progress.percentage<96)
-                this.progress.percentage = this.progress.percentage + 1
-           }
-           else if(res.data.status==2)
-           {
-             //alert(this.progress.percentage)
-             this.progress.percentage=100
-             clearInterval(this.progress.timer)
-             this.selectProNameChange(this.listQuery.projectName)
-           }
-        })
-      },
-      selectProNameChange(optionValue)
-      {
-           //alert(optionValue)
-           this.getPlanTimeList(optionValue)
-      },
-      planTimeChange(optionValue)
-      {
-            //alert(optionValue)
-            this.listQuery.planid=optionValue
-            this.getTestReportByPlanId(optionValue)
-
-      },
-      getPlanTimeList(proName)
-      {
-          //alert("litaojun-created-0");
-          const data = {
-                            projectname: proName
-                       };
-          reqPlanTimeList(data).then(res => {
-          if(res.data.code==='000000'){
-            //alert("litaojun-created-2");
-            this.planTimeList = res.data.listplan;
-            let num = this.planTimeList.length;
-            if(num>0)
-            {
-               this.listQuery.planid=this.planTimeList[num-1].id;
-               alert(JSON.stringify(this.listQuery.planid));
-               this.getTestReportByPlanId(this.planTimeList[num-1].id);
-            }
-            else{
-               this.tableData5=[]
-               this.planTimeList=[]
-            }
-          }
+          this.download(res.data,localName)
           })
       },
-      getTestReportByPlanId(planid)
+      getInterfaceProxyTscase()
       {
-          reqTestReport({'planid': planid}).then(res => {
+          reqProxyCaseData({}).then(res => {
           // alert("litaojun-created-1");
           if(res.data.code==='000000'){
             // alert("litaojun-created-2");
-            this.tableData5=res.data.testrst
+            this.interfaceProxyTscase=res.data.caseDataList
             // alert(JSON.stringify(this.listQuery.id))
           }
           })
