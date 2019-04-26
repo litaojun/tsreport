@@ -130,6 +130,7 @@ export default {
   methods:{
       downFile(filePath,localName)
       {
+        alert(filePath + localName)
         downProxyFile({"filePath":filePath}).then(res => {
           // alert("litaojun-created-1");
           this.download(res.data,localName)
@@ -149,6 +150,18 @@ export default {
       editInfo(interfaceName){  //编辑
           this.$router.push({ name: 'Elementtab', params: { plan: interfaceName }})
       },
+      download(data,name) {
+        if (!data) {
+            return
+        }
+        let url = window.URL.createObjectURL(new Blob([data]))
+        let link = document.createElement('a')
+        link.style.display = 'none'
+        link.href = url
+        link.setAttribute('download', name)
+        document.body.appendChild(link)
+        link.click()
+    },
       selectOneClass(row, rowIndex){
         // if(row.row.total == 0)
         //    return 'notTestClass'
