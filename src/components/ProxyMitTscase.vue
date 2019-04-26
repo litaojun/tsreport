@@ -24,17 +24,17 @@
 												fixed width="150"
                         label="">
                         <template slot-scope="scope">
-                          <el-button type="text" @click="downFile(scope.row.casePath,scope.row.localName)">down</el-button>
+                          <el-button type="text" @click="downFile(scope.row.fmtReqPath,scope.row.localName)">down</el-button>
                         </template>
                     </el-table-column>
                     <el-table-column fixed width="150" label="" >
                           <template slot-scope="scope">
-                              <el-button type="text" @click="downFile(scope.row.fmtReqPath,scope.row.localName)">down</el-button>
+                              <el-button type="text" @click="downFile(scope.row.fmtRspPath,scope.row.localName)">down</el-button>
                           </template>
                   </el-table-column>
                   <el-table-column fixed width="147" >
                           <template slot-scope="scope">
-                              <el-button type="text" @click="downFile(scope.row.fmtRspPath,scope.row.localName)">down</el-button>
+                              <el-button type="text" @click="downFile(scope.row.casePath,scope.row.localName)">down</el-button>
                           </template>
                   </el-table-column>
                </el-table>
